@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste - Tabela Simples</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+        
+        .produtos-tabela {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        
+        .produtos-tabela th,
+        .produtos-tabela td {
+            padding: 12px 8px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+            vertical-align: middle;
+        }
+        
+        .produtos-tabela th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        /* Larguras específicas para as colunas */
+        .produtos-tabela th:nth-child(1),
+        .produtos-tabela td:nth-child(1) { width: 22%; }
+        .produtos-tabela th:nth-child(2),
+        .produtos-tabela td:nth-child(2) { width: 13%; }
+        .produtos-tabela th:nth-child(3),
+        .produtos-tabela td:nth-child(3) { width: 8%; }
+        .produtos-tabela th:nth-child(4),
+        .produtos-tabela td:nth-child(4) { width: 10%; }
+        .produtos-tabela th:nth-child(5),
+        .produtos-tabela td:nth-child(5) { width: 12%; }
+        .produtos-tabela th:nth-child(6),
+        .produtos-tabela td:nth-child(6) { width: 10%; }
+        .produtos-tabela th:nth-child(7),
+        .produtos-tabela td:nth-child(7) { width: 25%; }
+        
+        .cor-mini {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 1px solid #dee2e6;
+            display: inline-block;
+            margin-right: 3px;
+        }
+        
+        .tamanho-mini {
+            background: #6c757d;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            margin-right: 3px;
+        }
+        
+        .produto-cores-cell > div,
+        .produto-tamanhos-cell > div {
+            display: flex;
+            gap: 3px;
+            flex-wrap: wrap;
+        }
+        
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-ativo {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .btn-acao {
+            padding: 4px 8px;
+            margin-right: 4px;
+            border: none;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+        
+        .btn-editar {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .btn-toggle-ativo {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .btn-excluir {
+            background-color: #dc3545;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="table-container">
+        <h2>Teste - Tabela de Produtos</h2>
+        
+        <table class="produtos-tabela">
+            <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>Categoria</th>
+                    <th>Pontos</th>
+                    <th>Cores</th>
+                    <th>Tamanhos</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="produto-nome-cell">Camisa Delírio</td>
+                    <td><span class="produto-categoria-cell">CAMISETA</span></td>
+                    <td class="produto-pontos-cell">100</td>
+                    <td class="produto-cores-cell">
+                        <div>
+                            <div class="cor-mini" style="background-color: #ff0000;" title="Vermelho"></div>
+                            <div class="cor-mini" style="background-color: #0000ff;" title="Azul"></div>
+                            <div class="cor-mini" style="background-color: #008000;" title="Verde"></div>
+                        </div>
+                    </td>
+                    <td class="produto-tamanhos-cell">
+                        <div>
+                            <span class="tamanho-mini">P</span>
+                            <span class="tamanho-mini">M</span>
+                            <span class="tamanho-mini">G</span>
+                            <span class="tamanho-mini">GG</span>
+                        </div>
+                    </td>
+                    <td class="produto-status-cell">
+                        <span class="status-badge status-ativo">✅ Ativo</span>
+                    </td>
+                    <td class="produto-acoes-cell">
+                        <button class="btn-acao btn-editar">✏️ Editar</button>
+                        <button class="btn-acao btn-toggle-ativo">👁️‍🗨️ Desativar</button>
+                        <button class="btn-acao btn-excluir">🗑️ Excluir</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

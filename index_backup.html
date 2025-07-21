@@ -1,0 +1,374 @@
+<!DOCTYPE html> 
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Portal DelRio</title>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Login -->
+  <div class="login-container" id="login-container">
+    <h2>Área Restrita</h2>
+    <input type="text" id="usuario" placeholder="Usuário" required />
+    <input type="password" id="senha" placeholder="Senha" required />
+    <button onclick="validarLogin()">Entrar</button>
+  </div>
+
+  <!-- Conteúdo -->
+  <div id="conteudo-principal">
+    <header class="fade-in-up">
+      <img src="assets/images/branding/logo.png" alt="Logo DelRio" class="logo">
+      <h1>Bem-vindo(a) ao Portal DelRio!</h1>
+      <nav>
+        <div class="nav-buttons">
+          <button onclick="mostrarSecao('home')">🏠 Home</button>
+          <button onclick="mostrarSecao('registro')">📋 Registro</button>
+          <button onclick="mostrarSecao('premios')">🎁 Prêmios</button>
+          <button onclick="mostrarSecao('dashboard')">📊 Dashboard</button>
+          <button onclick="mostrarSecao('contato')">📞 Contato</button>
+        </div>
+        <div class="user-section">
+          <span class="usuario-nome" id="usuario-nome">👤 Usuário</span>
+          <button onclick="sairPortal()" class="btn-sair">🚪 Sair</button>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Seção Home -->
+    <section class="formulario fade-in-up" id="secao-home" style="display: none;">
+      <div id="banner-rotativo">
+        <img id="banner-img" src="assets/images/banners/banner1.jpg" alt="Banner 1">
+        <button id="banner-prev" onclick="trocarBanner(-1)">&#8592;</button>
+        <button id="banner-next" onclick="trocarBanner(1)">&#8594;</button>
+        
+        <!-- Indicadores de posição -->
+        <div class="banner-indicators" id="banner-indicators">
+          <span class="indicator active" onclick="irParaBanner(0)"></span>
+          <span class="indicator" onclick="irParaBanner(1)"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cartões -->
+    <section class="cards fade-in-up" id="cards-section" style="display: none;">
+      <div class="card">
+        <h1 id="pontos">0</h1>
+        <p>Meus Pontos</p>
+      </div>
+      <div class="card">
+        <h1 id="premio">0</h1>
+        <p>Próximo Prêmio</p>
+      </div>
+    </section>
+
+    <!-- Seção Registro -->
+    <section class="formulario fade-in-up" id="secao-registro">
+      <h3 style="text-align: center; margin-bottom: 30px;">📝 REGISTRE NOSSOS PRODUTOS AQUI</h3>
+
+      <div class="form-group">
+        <label for="referencia">Referência</label>
+        <div class="input-icon-group">
+          <img src="assets/images/icones/icone-referencia.png" alt="Ícone Referência">
+          <select id="referencia" onchange="atualizarDadosProduto()">
+            <option value="">Selecione uma referência...</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="nome-produto">Nome do Produto</label>
+        <div class="input-icon-group">
+          <img src="assets/images/icones/icone-referencia.png" alt="Ícone Produto">
+          <input type="text" id="nome-produto" placeholder="Nome será preenchido automaticamente" readonly />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="cod_barras">Código de Barras</label>
+        <div class="input-icon-group">
+          <img src="assets/images/icones/icone-barcode.png" alt="Ícone Código de Barras">
+          <input type="text" id="cod_barras" placeholder="Código será preenchido automaticamente" readonly />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="estoque-atual">Estoque Atual</label>
+        <div class="input-icon-group">
+          <img src="assets/images/icones/icone-quantidade.png" alt="Ícone Estoque">
+          <input type="number" id="estoque-atual" placeholder="Estoque será preenchido automaticamente" readonly />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="quantidade">Quantidade a Registrar</label>
+        <div class="input-icon-group">
+          <img src="assets/images/icones/icone-quantidade.png" alt="Ícone Quantidade">
+          <input type="number" id="quantidade" placeholder="Ex: 2" min="1" />
+        </div>
+      </div>
+
+      <button onclick="registrarProduto()">Registrar Produto</button>
+    </section>
+
+    <!-- Seção Prêmios -->
+    <section class="formulario fade-in-up" id="secao-premios" style="display: none;">
+      <h3 style="text-align: center; margin-bottom: 40px;">🎁 PRÊMIOS DISPONÍVEIS</h3>
+      <div id="vitrine-premios">
+        <!-- Produto 1 -->
+        <div>
+          <img id="img-produto" src="assets/images/produtos/produto-branca.jpg" alt="Produto Exemplo" style="width:140px; height:140px; object-fit:contain; margin-bottom:15px; align-self:center;">
+          <h4 style="margin:10px 0; font-size:16px; text-align:center;">T-SHIRT EM SENSITIVE</h4>
+          <div style="margin:15px 0;">
+            <label>Cor: <span id="nome-cor-produto" style="font-weight:bold; color:#7F80AF;"></span></label>
+            <div id="cores-produto" style="display:flex; gap:10px; justify-content:center; margin-top:8px;">
+              <span class="cor-icone" title="Anís" style="background:#ececf4;" onclick="selecionarCorProduto('Anís')"></span>
+              <span class="cor-icone" title="Branca" style="background:#fff; border:1px solid #ddd;" onclick="selecionarCorProduto('Branca')"></span>
+              <span class="cor-icone" title="Cappuccino" style="background:#c18666;" onclick="selecionarCorProduto('Cappuccino')"></span>
+            </div>
+          </div>
+          <div style="margin:15px 0;">
+            <label for="tamanho-produto">Tamanho:</label>
+            <select id="tamanho-produto" style="margin-left:10px; padding:5px;">
+              <option value="P">P</option>
+              <option value="M">M</option>
+              <option value="G">G</option>
+              <option value="GG">GG</option>
+            </select>
+          </div>
+          <div style="margin:15px 0; color:#7F80AF; font-weight:bold; font-size:14px;">
+            Valor para resgate: 200 pontos
+          </div>
+          <button onclick="resgatarPremio()" style="padding:12px; font-size:14px;">Resgatar Prêmio</button>
+        </div>
+        
+        <!-- Produto 2 -->
+        <div>
+          <img id="img-pantalona" src="assets/images/produtos/pantalona-preto.jpg" alt="Calça Pantalona" style="width:140px; height:140px; object-fit:contain; margin-bottom:15px; align-self:center;">
+          <h4 style="margin:10px 0; font-size:16px; text-align:center;">CALÇA PANTALONA BASIC FIT</h4>
+          <div style="margin:15px 0;">
+            <label>Cor: <span id="nome-cor-pantalona" style="font-weight:bold; color:#7F80AF;"></span></label>
+            <div id="cores-pantalona" style="display:flex; gap:10px; justify-content:center; margin-top:8px;">
+              <span class="cor-icone" title="Preto" style="background:#222;" onclick="selecionarCorPantalona('Preto')"></span>
+              <span class="cor-icone" title="Cappuccino" style="background:#c18666;" onclick="selecionarCorPantalona('Cappuccino')"></span>
+              <span class="cor-icone" title="Verde Militar" style="background:#6b7a4b;" onclick="selecionarCorPantalona('Verde Militar')"></span>
+            </div>
+          </div>
+          <div style="margin:15px 0;">
+            <label for="tamanho-pantalona">Tamanho:</label>
+            <select id="tamanho-pantalona" style="margin-left:10px; padding:5px;">
+              <option value="P">P</option>
+              <option value="M">M</option>
+              <option value="G">G</option>
+              <option value="GG">GG</option>
+            </select>
+          </div>
+          <div style="margin:15px 0; color:#7F80AF; font-weight:bold; font-size:14px;">
+            Valor para resgate: 300 pontos
+          </div>
+          <button onclick="resgatarPantalona()" style="padding:12px; font-size:14px;">Resgatar Prêmio</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção Contato -->
+    <section class="formulario fade-in-up" id="secao-contato" style="display: none; margin-top: 40px;">
+      <h3 style="text-align: center; margin-bottom: 30px;">📞 CONTATO</h3>
+      <div style="text-align: center; padding: 30px;">
+        <h4 style="color: #667eea; margin-bottom: 40px; font-size: 20px; font-weight: 600;">Entre em contato conosco</h4>
+        
+        <div style="display: flex; flex-direction: column; gap: 25px; max-width: 500px; margin: 0 auto;">
+          <div style="display: flex; align-items: center; gap: 20px; padding: 20px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 15px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 15px 35px rgba(0, 0, 0, 0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0, 0, 0, 0.1)'">
+            <span style="font-size: 28px; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));">📧</span>
+            <div style="text-align: left; flex: 1;">
+              <strong style="color: #2c3e50; font-size: 16px;">E-mail:</strong><br>
+              <span style="color: #667eea; font-weight: 500;">contato@delrio.com.br</span>
+            </div>
+            <button onclick="abrirFormularioContato()" style="padding: 12px 18px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 600; width: 120px; height: 40px; white-space: nowrap; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(102, 126, 234, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.3)'">Enviar E-mail</button>
+          </div>
+          
+          <div style="display: flex; align-items: center; gap: 20px; padding: 20px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 15px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 15px 35px rgba(0, 0, 0, 0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0, 0, 0, 0.1)'">
+            <span style="font-size: 28px; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));">📱</span>
+            <div style="text-align: left; flex: 1;">
+              <strong style="color: #2c3e50; font-size: 16px;">WhatsApp:</strong><br>
+              <span style="color: #667eea; font-weight: 500;">(11) 99999-9999</span>
+            </div>
+            <button onclick="abrirWhatsApp()" style="padding: 12px 18px; background: linear-gradient(135deg, #25D366 0%, #20c997 100%); color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 600; width: 120px; height: 40px; white-space: nowrap; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(37, 211, 102, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(37, 211, 102, 0.3)'">Abrir WhatsApp</button>
+          </div>
+          
+          <div style="display: flex; align-items: center; gap: 20px; padding: 20px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 15px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 15px 35px rgba(0, 0, 0, 0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0, 0, 0, 0.1)'">
+            <span style="font-size: 28px; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));">☎️</span>
+            <div style="text-align: center; flex: 1;">
+              <strong style="color: #2c3e50; font-size: 16px;">Telefone:</strong><br>
+              <span style="color: #667eea; font-weight: 500;">(11) 3333-3333</span>
+            </div>
+          </div>
+          
+          <div style="display: flex; align-items: center; gap: 20px; padding: 20px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 15px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 15px 35px rgba(0, 0, 0, 0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0, 0, 0, 0.1)'">
+            <span style="font-size: 28px; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));">📍</span>
+            <div style="text-align: center; flex: 1;">
+              <strong style="color: #2c3e50; font-size: 16px;">Endereço:</strong><br>
+              <span style="color: #667eea; font-weight: 500;">Rua das Flores, 123<br>São Paulo - SP</span>
+            </div>
+          </div>
+          
+          <div style="display: flex; align-items: center; gap: 20px; padding: 20px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 15px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 15px 35px rgba(0, 0, 0, 0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0, 0, 0, 0.1)'">
+            <span style="font-size: 28px; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));">🕒</span>
+            <div style="text-align: center; flex: 1;">
+              <strong style="color: #2c3e50; font-size: 16px;">Horário de Atendimento:</strong><br>
+              <span style="color: #667eea; font-weight: 500;">Segunda a Sexta: 8h às 18h<br>Sábado: 8h às 12h</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção Dashboard Analytics -->
+    <section class="formulario fade-in-up" id="secao-dashboard" style="display: none;">
+      <h3 style="text-align: center; margin-bottom: 40px; font-size: 2.2em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">📊 DASHBOARD ANALYTICS</h3>
+      
+      <!-- Resumo Geral -->
+      <div class="dashboard-summary">
+        <div class="summary-card">
+          <div class="summary-icon">📈</div>
+          <div class="summary-content">
+            <h4>Registros de Hoje</h4>
+            <span class="summary-value" id="vendas-hoje">0</span>
+            <small>produtos registrados</small>
+          </div>
+        </div>
+        
+        <div class="summary-card">
+          <div class="summary-icon">🏆</div>
+          <div class="summary-content">
+            <h4>Pontos Acumulados</h4>
+            <span class="summary-value" id="faturamento">R$ 0,00</span>
+            <small>últimos 30 dias</small>
+          </div>
+        </div>
+        
+        <div class="summary-card">
+          <div class="summary-icon">🎯</div>
+          <div class="summary-content">
+            <h4>Meta Mensal</h4>
+            <span class="summary-value" id="meta-progresso">0%</span>
+            <small>progresso da meta</small>
+          </div>
+        </div>
+        
+        <div class="summary-card">
+          <div class="summary-icon">⭐</div>
+          <div class="summary-content">
+            <h4>Performance</h4>
+            <span class="summary-value" id="performance">Excelente</span>
+            <small>classificação</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráficos -->
+      <div class="dashboard-charts">
+        <div class="chart-container">
+          <h4>📊 Registros por Dia (Últimos 7 dias)</h4>
+          <canvas id="vendas-chart" width="400" height="200"></canvas>
+        </div>
+        
+        <div class="chart-container">
+          <h4>🏆 Top Produtos Registrados</h4>
+          <div class="top-produtos">
+            <div class="produto-rank">
+              <span class="rank">#1</span>
+              <span class="produto-nome">T-Shirt Básica</span>
+              <span class="produto-vendas">45 registros</span>
+            </div>
+            <div class="produto-rank">
+              <span class="rank">#2</span>
+              <span class="produto-nome">Calça Jeans</span>
+              <span class="produto-vendas">32 registros</span>
+            </div>
+            <div class="produto-rank">
+              <span class="rank">#3</span>
+              <span class="produto-nome">Blusa Social</span>
+              <span class="produto-vendas">28 registros</span>
+            </div>
+            <div class="produto-rank">
+              <span class="rank">#4</span>
+              <span class="produto-nome">Tênis Esportivo</span>
+              <span class="produto-vendas">21 registros</span>
+            </div>
+            <div class="produto-rank">
+              <span class="rank">#5</span>
+              <span class="produto-nome">Vestido Casual</span>
+              <span class="produto-vendas">18 registros</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filtros de Período -->
+      <div class="dashboard-filters">
+        <h4>📅 Filtrar por Período</h4>
+        <div class="filter-buttons">
+          <button onclick="filtrarDashboard('hoje')" class="filter-btn active">Hoje</button>
+          <button onclick="filtrarDashboard('semana')" class="filter-btn">7 dias</button>
+          <button onclick="filtrarDashboard('mes')" class="filter-btn">30 dias</button>
+          <button onclick="filtrarDashboard('trimestre')" class="filter-btn">90 dias</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modal Formulário de Contato -->
+    <div id="modal-contato" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+      <div style="background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 500px; position: relative;">
+        <button onclick="fecharFormularioContato()" style="position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">&times;</button>
+        
+        <h3 style="margin-bottom: 20px; color: #7F80AF; text-align: center;">Formulário de Contato</h3>
+        
+        <form id="form-contato">
+          <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #04185b;">Nome:</label>
+            <input type="text" id="nome-contato" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
+          </div>
+          
+          <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #04185b;">E-mail:</label>
+            <input type="email" id="email-contato" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
+          </div>
+          
+          <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #04185b;">Telefone:</label>
+            <input type="tel" id="telefone-contato" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
+          </div>
+          
+          <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #04185b;">Assunto:</label>
+            <input type="text" id="assunto-contato" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
+          </div>
+          
+          <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #04185b;">Mensagem:</label>
+            <textarea id="mensagem-contato" required rows="4" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; resize: vertical;"></textarea>
+          </div>
+          
+          <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <button type="button" onclick="fecharFormularioContato()" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer;">Cancelar</button>
+            <button type="submit" style="padding: 10px 20px; background: #7F80AF; color: white; border: none; border-radius: 5px; cursor: pointer;">Enviar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <footer>
+      <p>&copy; 2025 - Registration Application for Store Clerk | Designed by Johnata Paiva</p>
+    </footer>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+
+  <!-- Container para notificações toast -->
+  <div class="toast-container" id="toast-container"></div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teste Produto</title>
+</head>
+<body>
+    <h1>Teste de Produto</h1>
+    <button onclick="criarProdutoTeste()">Criar Produto Teste</button>
+    <button onclick="verificarProdutos()">Verificar Produtos</button>
+    <button onclick="limparProdutos()">Limpar Produtos</button>
+    
+    <div id="resultado"></div>
+    
+    <script>
+        function criarProdutoTeste() {
+            const produtoTeste = {
+                id: 'prod_teste_' + Date.now(),
+                nome: 'Camisa Delrio Teste',
+                pontos: 150,
+                categoria: 'camiseta',
+                imagem: 'assets/images/produtos/produto-branca.jpg',
+                cores: ['branco', 'azul', 'verde'],
+                tamanhos: ['P', 'M', 'G'],
+                ativo: true,
+                dataCadastro: new Date().toISOString()
+            };
+            
+            const produtos = JSON.parse(localStorage.getItem('produtos') || '[]');
+            produtos.push(produtoTeste);
+            localStorage.setItem('produtos', JSON.stringify(produtos));
+            
+            document.getElementById('resultado').innerHTML = '<p>Produto teste criado!</p>';
+            console.log('Produto teste criado:', produtoTeste);
+        }
+        
+        function verificarProdutos() {
+            const produtos = JSON.parse(localStorage.getItem('produtos') || '[]');
+            document.getElementById('resultado').innerHTML = '<pre>' + JSON.stringify(produtos, null, 2) + '</pre>';
+            console.log('Produtos no localStorage:', produtos);
+        }
+        
+        function limparProdutos() {
+            localStorage.removeItem('produtos');
+            document.getElementById('resultado').innerHTML = '<p>Produtos limpos!</p>';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs e arquivos temporários
+*.log
+*.tmp
+*.temp
+
+# Arquivos de backup
+*.bak
+*.backup
+*~
+
+# Diretórios de cache
+.cache/
+temp/
+
+# Arquivos de configuração do editor
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# Arquivos de dependências (futuras implementações)
+node_modules/
+vendor/
+
+# Arquivos de build (futuras implementações)
+dist/
+build/
+output/
+
+# Arquivos de ambiente (futuras implementações)
+.env
+.env.local
+.env.production
+
+# Arquivos específicos do Windows
+*.lnk
+$RECYCLE.BIN/
+
+# Arquivos específicos do macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Arquivos específicos do Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*

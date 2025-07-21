@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Teste de Configuração</title>
+</head>
+<body>
+    <h1>Teste de Configuração - Portal DelRio</h1>
+    <div id="result"></div>
+    
+    <script src="config.js"></script>
+    <script>
+        const resultDiv = document.getElementById('result');
+        
+        console.log("=== TESTE DE CONFIGURAÇÃO ===");
+        
+        if (typeof CONFIG_PRODUTOS !== 'undefined') {
+            console.log("✅ CONFIG_PRODUTOS carregado:", CONFIG_PRODUTOS);
+            resultDiv.innerHTML = `
+                <h2>✅ CONFIG_PRODUTOS Carregado</h2>
+                <p><strong>Produtos encontrados:</strong> ${CONFIG_PRODUTOS.produtos.length}</p>
+                <ul>
+                    ${CONFIG_PRODUTOS.produtos.map(p => 
+                        `<li>${p.referencia} - ${p.nome} (Estoque: ${p.estoqueAtual})</li>`
+                    ).join('')}
+                </ul>
+            `;
+        } else {
+            console.error("❌ CONFIG_PRODUTOS não está definido!");
+            resultDiv.innerHTML = '<h2 style="color: red;">❌ CONFIG_PRODUTOS não carregado</h2>';
+        }
+        
+        if (typeof CONFIG_LOGIN !== 'undefined') {
+            console.log("✅ CONFIG_LOGIN carregado:", CONFIG_LOGIN);
+        } else {
+            console.error("❌ CONFIG_LOGIN não está definido!");
+        }
+    </script>
+</body>
+</html>

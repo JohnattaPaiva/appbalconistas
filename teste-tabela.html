@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Tabela Produtos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .produtos-tabela-container {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .produtos-tabela {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+            table-layout: fixed;
+        }
+        
+        .produtos-tabela th {
+            background: linear-gradient(135deg, #495057 0%, #6c757d 100%);
+            color: white;
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .produtos-tabela th:nth-child(1) { width: 25%; }
+        .produtos-tabela th:nth-child(2) { width: 15%; }
+        .produtos-tabela th:nth-child(3) { width: 10%; }
+        .produtos-tabela th:nth-child(4) { width: 12%; }
+        .produtos-tabela th:nth-child(5) { width: 12%; }
+        .produtos-tabela th:nth-child(6) { width: 10%; }
+        .produtos-tabela th:nth-child(7) { width: 16%; }
+        
+        .produtos-tabela td {
+            padding: 15px 12px;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: middle;
+            color: #495057;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .produtos-tabela tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .cor-mini {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 1px solid #dee2e6;
+            display: inline-block;
+            margin-right: 3px;
+        }
+        
+        .tamanho-mini {
+            background: #6c757d;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            margin-right: 3px;
+        }
+        
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        
+        .status-ativo {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .produto-categoria-cell {
+            background: #e9ecef;
+            color: #495057;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+        
+        .btn-acao {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            margin: 2px;
+            color: white;
+        }
+        
+        .btn-editar { background: #007bff; }
+        .btn-toggle-ativo { background: #ffc107; color: #212529; }
+        .btn-excluir { background: #dc3545; }
+    </style>
+</head>
+<body>
+    <h1>Teste de Tabela de Produtos</h1>
+    
+    <div class="produtos-tabela-container">
+        <table class="produtos-tabela">
+            <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>Categoria</th>
+                    <th>Pontos</th>
+                    <th>Cores</th>
+                    <th>Tamanhos</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="produtos-tabela-body">
+                <!-- Produtos serão carregados aqui -->
+            </tbody>
+        </table>
+    </div>
+
+    <br>
+    <button onclick="adicionarProdutoTeste()">Adicionar Produto Teste</button>
+    <button onclick="limparTabela()">Limpar Tabela</button>
+
+    <script>
+        function getCorStyle(cor) {
+            const cores = {
+                'branco': '#ffffff',
+                'preto': '#000000',
+                'azul': '#007bff',
+                'verde': '#28a745',
+                'vermelho': '#dc3545',
+                'cinza': '#6c757d'
+            };
+            return cores[cor] || '#cccccc';
+        }
+
+        function criarLinhaProduto(produto) {
+            const row = document.createElement('tr');
+            
+            // Cores HTML
+            const coresHtml = produto.cores && produto.cores.length > 0 ? produto.cores.map(cor => {
+                const corStyle = getCorStyle(cor);
+                return `<div class="cor-mini" style="background-color: ${corStyle};" title="${cor}"></div>`;
+            }).join('') : '<span style="color: #999; font-size: 12px;">Nenhuma</span>';
+            
+            // Tamanhos HTML
+            const tamanhosHtml = produto.tamanhos && produto.tamanhos.length > 0 ? produto.tamanhos.map(tamanho => {
+                return `<span class="tamanho-mini">${tamanho}</span>`;
+            }).join('') : '<span style="color: #999; font-size: 12px;">Nenhum</span>';
+            
+            // Status
+            const statusClass = produto.ativo ? 'status-ativo' : 'status-inativo';
+            const statusText = produto.ativo ? 'Ativo' : 'Inativo';
+            const statusIcon = produto.ativo ? '✅' : '❌';
+            
+            // Criar cada célula individualmente para garantir a ordem
+            const cellProduto = document.createElement('td');
+            cellProduto.className = 'produto-nome-cell';
+            cellProduto.title = produto.nome || 'Sem nome';
+            cellProduto.textContent = produto.nome || 'Sem nome';
+            
+            const cellCategoria = document.createElement('td');
+            cellCategoria.innerHTML = `<span class="produto-categoria-cell">${produto.categoria || 'Sem categoria'}</span>`;
+            
+            const cellPontos = document.createElement('td');
+            cellPontos.className = 'produto-pontos-cell';
+            cellPontos.textContent = produto.pontos || 0;
+            
+            const cellCores = document.createElement('td');
+            cellCores.className = 'produto-cores-cell';
+            cellCores.innerHTML = coresHtml;
+            
+            const cellTamanhos = document.createElement('td');
+            cellTamanhos.className = 'produto-tamanhos-cell';
+            cellTamanhos.innerHTML = tamanhosHtml;
+            
+            const cellStatus = document.createElement('td');
+            cellStatus.className = 'produto-status-cell';
+            cellStatus.innerHTML = `<span class="status-badge ${statusClass}">${statusIcon} ${statusText}</span>`;
+            
+            const cellAcoes = document.createElement('td');
+            cellAcoes.className = 'produto-acoes-cell';
+            cellAcoes.innerHTML = `
+                <button class="btn-acao btn-editar">✏️ Editar</button>
+                <button class="btn-acao btn-toggle-ativo">👁️‍🗨️ Desativar</button>
+                <button class="btn-acao btn-excluir">🗑️ Excluir</button>
+            `;
+            
+            // Adicionar as células na ordem correta
+            row.appendChild(cellProduto);
+            row.appendChild(cellCategoria);
+            row.appendChild(cellPontos);
+            row.appendChild(cellCores);
+            row.appendChild(cellTamanhos);
+            row.appendChild(cellStatus);
+            row.appendChild(cellAcoes);
+            
+            return row;
+        }
+
+        function adicionarProdutoTeste() {
+            const produto = {
+                id: 'teste_' + Date.now(),
+                nome: 'Camisa Delrio',
+                categoria: 'camiseta',
+                pontos: 100,
+                cores: ['branco', 'azul', 'verde'],
+                tamanhos: ['P', 'M', 'G'],
+                ativo: true
+            };
+            
+            const tbody = document.getElementById('produtos-tabela-body');
+            const row = criarLinhaProduto(produto);
+            tbody.appendChild(row);
+            
+            console.log('Produto adicionado:', produto);
+        }
+
+        function limparTabela() {
+            const tbody = document.getElementById('produtos-tabela-body');
+            tbody.innerHTML = '';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Edição</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .produtos-form-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            border: 2px solid #007bff;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .visible {
+            display: block;
+        }
+        
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        .debug {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #17a2b8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Teste de Edição de Produtos</h1>
+        
+        <div class="debug">
+            <h3>Debug Console</h3>
+            <div id="debug-output"></div>
+        </div>
+        
+        <div id="produtos-lista-principal" class="visible">
+            <h2>Lista de Produtos</h2>
+            <p>Esta é a lista de produtos.</p>
+            <button onclick="testarEdicao()">Testar Edição</button>
+        </div>
+        
+        <div id="produtos-form-section" class="produtos-form-section hidden">
+            <h2>Formulário de Edição</h2>
+            <p>Este é o formulário de edição.</p>
+            <form id="form-produto">
+                <div>
+                    <label>Nome do Produto:</label>
+                    <input type="text" id="produto-nome" placeholder="Nome do produto">
+                </div>
+                <div>
+                    <label>Pontos:</label>
+                    <input type="number" id="produto-pontos" placeholder="Pontos">
+                </div>
+                <div>
+                    <label>Categoria:</label>
+                    <select id="produto-categoria">
+                        <option value="">Selecione...</option>
+                        <option value="camiseta">Camiseta</option>
+                        <option value="pantalona">Pantalona</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Status:</label>
+                    <select id="produto-ativo">
+                        <option value="true">Ativo</option>
+                        <option value="false">Inativo</option>
+                    </select>
+                </div>
+                <button type="button" onclick="voltarParaLista()">Voltar</button>
+                <button type="submit">Salvar</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        function debugLog(message) {
+            const debugOutput = document.getElementById('debug-output');
+            debugOutput.innerHTML += '<div>' + new Date().toLocaleTimeString() + ': ' + message + '</div>';
+            console.log(message);
+        }
+        
+        function obterProdutos() {
+            // Simulando produtos
+            return [
+                {
+                    id: 'teste-1',
+                    nome: 'Produto Teste',
+                    pontos: 100,
+                    categoria: 'camiseta',
+                    ativo: true
+                }
+            ];
+        }
+        
+        function testarEdicao() {
+            debugLog('=== INICIANDO TESTE DE EDIÇÃO ===');
+            
+            const produtos = obterProdutos();
+            const produto = produtos[0];
+            
+            debugLog('Produto encontrado: ' + produto.nome);
+            
+            // Verificar elementos
+            const listaElement = document.getElementById('produtos-lista-principal');
+            const formElement = document.getElementById('produtos-form-section');
+            
+            debugLog('Lista element encontrado: ' + (listaElement ? 'SIM' : 'NÃO'));
+            debugLog('Form element encontrado: ' + (formElement ? 'SIM' : 'NÃO'));
+            
+            if (!listaElement || !formElement) {
+                debugLog('ERRO: Elementos não encontrados!');
+                return;
+            }
+            
+            // Alternar visibilidade
+            debugLog('Alternando visibilidade...');
+            listaElement.style.display = 'none';
+            formElement.style.display = 'block';
+            
+            // Verificar se funcionou
+            debugLog('Lista display: ' + listaElement.style.display);
+            debugLog('Form display: ' + formElement.style.display);
+            debugLog('Form visível: ' + (formElement.offsetHeight > 0));
+            
+            // Preencher campos
+            document.getElementById('produto-nome').value = produto.nome;
+            document.getElementById('produto-pontos').value = produto.pontos;
+            document.getElementById('produto-categoria').value = produto.categoria;
+            document.getElementById('produto-ativo').value = produto.ativo ? 'true' : 'false';
+            
+            debugLog('Campos preenchidos');
+            debugLog('=== TESTE CONCLUÍDO ===');
+        }
+        
+        function voltarParaLista() {
+            debugLog('Voltando para a lista...');
+            
+            const listaElement = document.getElementById('produtos-lista-principal');
+            const formElement = document.getElementById('produtos-form-section');
+            
+            listaElement.style.display = 'block';
+            formElement.style.display = 'none';
+            
+            debugLog('Voltou para a lista');
+        }
+        
+        // Inicializar
+        window.onload = function() {
+            debugLog('Página carregada. Pronto para testar!');
+        };
+    </script>
+</body>
+</html>

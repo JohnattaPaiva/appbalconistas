@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug - Tabela de Produtos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+        
+        .produtos-tabela {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        
+        .produtos-tabela th,
+        .produtos-tabela td {
+            padding: 12px 8px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+            vertical-align: middle;
+        }
+        
+        .produtos-tabela th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        /* Larguras específicas para as colunas */
+        .produtos-tabela th:nth-child(1),
+        .produtos-tabela td:nth-child(1) { width: 22%; }
+        .produtos-tabela th:nth-child(2),
+        .produtos-tabela td:nth-child(2) { width: 13%; }
+        .produtos-tabela th:nth-child(3),
+        .produtos-tabela td:nth-child(3) { width: 8%; }
+        .produtos-tabela th:nth-child(4),
+        .produtos-tabela td:nth-child(4) { width: 10%; }
+        .produtos-tabela th:nth-child(5),
+        .produtos-tabela td:nth-child(5) { width: 12%; }
+        .produtos-tabela th:nth-child(6),
+        .produtos-tabela td:nth-child(6) { width: 10%; }
+        .produtos-tabela th:nth-child(7),
+        .produtos-tabela td:nth-child(7) { width: 25%; }
+        
+        .cor-mini {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 1px solid #dee2e6;
+            display: inline-block;
+            margin-right: 3px;
+        }
+        
+        .tamanho-mini {
+            background: #6c757d;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            margin-right: 3px;
+        }
+        
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .status-ativo {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-inativo {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .btn-acao {
+            padding: 4px 8px;
+            margin-right: 4px;
+            border: none;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+        
+        .btn-editar {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .btn-toggle-ativo {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .btn-excluir {
+            background-color: #dc3545;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="table-container">
+        <h2>Debug - Tabela de Produtos</h2>
+        
+        <table class="produtos-tabela">
+            <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>Categoria</th>
+                    <th>Pontos</th>
+                    <th>Cores</th>
+                    <th>Tamanhos</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="produtos-tbody">
+                <!-- Produtos serão inseridos aqui -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Produto de teste
+        const produtoTeste = {
+            id: 'teste-1',
+            nome: 'Calça Jeans Premium',
+            categoria: 'Calças',
+            pontos: 150,
+            cores: ['Azul', 'Preto', 'Branco'],
+            tamanhos: ['P', 'M', 'G', 'GG'],
+            ativo: true
+        };
+
+        function getCorStyle(cor) {
+            const coresMap = {
+                'Azul': '#0066cc',
+                'Preto': '#000000',
+                'Branco': '#ffffff',
+                'Vermelho': '#ff0000',
+                'Verde': '#008000',
+                'Amarelo': '#ffff00',
+                'Rosa': '#ff69b4',
+                'Roxo': '#800080',
+                'Laranja': '#ff8c00',
+                'Marrom': '#8b4513',
+                'Cinza': '#808080',
+                'Bege': '#f5f5dc'
+            };
+            return coresMap[cor] || '#cccccc';
+        }
+
+        function criarLinhaProduto(produto) {
+            const row = document.createElement('tr');
+            
+            // Célula 1: Produto
+            const cellProduto = document.createElement('td');
+            cellProduto.textContent = produto.nome || 'Sem nome';
+            
+            // Célula 2: Categoria
+            const cellCategoria = document.createElement('td');
+            cellCategoria.innerHTML = `<span>${produto.categoria || 'Sem categoria'}</span>`;
+            
+            // Célula 3: Pontos
+            const cellPontos = document.createElement('td');
+            cellPontos.textContent = produto.pontos || 0;
+            
+            // Célula 4: Cores
+            const cellCores = document.createElement('td');
+            if (produto.cores && produto.cores.length > 0) {
+                const coresContainer = document.createElement('div');
+                coresContainer.style.display = 'flex';
+                coresContainer.style.gap = '3px';
+                coresContainer.style.flexWrap = 'wrap';
+                
+                produto.cores.forEach(cor => {
+                    const corDiv = document.createElement('div');
+                    corDiv.className = 'cor-mini';
+                    corDiv.style.backgroundColor = getCorStyle(cor);
+                    corDiv.title = cor;
+                    coresContainer.appendChild(corDiv);
+                });
+                
+                cellCores.appendChild(coresContainer);
+            } else {
+                cellCores.innerHTML = '<span style="color: #999; font-size: 12px;">Nenhuma</span>';
+            }
+            
+            // Célula 5: Tamanhos
+            const cellTamanhos = document.createElement('td');
+            if (produto.tamanhos && produto.tamanhos.length > 0) {
+                const tamanhosContainer = document.createElement('div');
+                tamanhosContainer.style.display = 'flex';
+                tamanhosContainer.style.gap = '3px';
+                tamanhosContainer.style.flexWrap = 'wrap';
+                
+                produto.tamanhos.forEach(tamanho => {
+                    const tamanhoSpan = document.createElement('span');
+                    tamanhoSpan.className = 'tamanho-mini';
+                    tamanhoSpan.textContent = tamanho;
+                    tamanhosContainer.appendChild(tamanhoSpan);
+                });
+                
+                cellTamanhos.appendChild(tamanhosContainer);
+            } else {
+                cellTamanhos.innerHTML = '<span style="color: #999; font-size: 12px;">Nenhum</span>';
+            }
+            
+            // Célula 6: Status
+            const cellStatus = document.createElement('td');
+            const statusClass = produto.ativo ? 'status-ativo' : 'status-inativo';
+            const statusText = produto.ativo ? 'Ativo' : 'Inativo';
+            const statusIcon = produto.ativo ? '✅' : '❌';
+            cellStatus.innerHTML = `<span class="status-badge ${statusClass}">${statusIcon} ${statusText}</span>`;
+            
+            // Célula 7: Ações
+            const cellAcoes = document.createElement('td');
+            cellAcoes.innerHTML = `
+                <button class="btn-acao btn-editar">✏️ Editar</button>
+                <button class="btn-acao btn-toggle-ativo">👁️‍🗨️ Desativar</button>
+                <button class="btn-acao btn-excluir">🗑️ Excluir</button>
+            `;
+            
+            // Adicionar as células na ordem correta
+            row.appendChild(cellProduto);
+            row.appendChild(cellCategoria);
+            row.appendChild(cellPontos);
+            row.appendChild(cellCores);
+            row.appendChild(cellTamanhos);
+            row.appendChild(cellStatus);
+            row.appendChild(cellAcoes);
+            
+            return row;
+        }
+
+        // Carregar produto de teste
+        document.addEventListener('DOMContentLoaded', function() {
+            const tbody = document.getElementById('produtos-tbody');
+            const row = criarLinhaProduto(produtoTeste);
+            tbody.appendChild(row);
+        });
+    </script>
+</body>
+</html>

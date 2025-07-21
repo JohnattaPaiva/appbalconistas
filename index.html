@@ -1,0 +1,1092 @@
+<!DOCTYPE html> 
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Portal DelRio</title>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Login -->
+  <div class="login-container" id="login-container">
+    <img src="assets/logo.png" alt="Logo DelRio" style="width: 120px; height: auto; margin-bottom: 20px; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));">
+    <h2>Área Restrita</h2>
+    <input type="text" id="usuario" placeholder="Usuário" required />
+    <input type="password" id="senha" placeholder="Senha" required />
+    <button onclick="validarLogin()">Entrar</button>
+  </div>
+
+  <!-- Conteúdo -->
+  <div id="conteudo-principal">
+    <!-- Overlay para fechar menu mobile -->
+    <div class="mobile-overlay" id="mobile-overlay" onclick="closeMobileMenu()"></div>
+    
+    <header class="fade-in-up">
+      <div class="header-top">
+        <img src="assets/logo.png" alt="Logo DelRio" class="logo">
+        <h1>Bem-vindo(a) ao Portal DelRio!</h1>
+        
+        <!-- Botão Hamburger para Mobile -->
+        <button class="hamburger-btn" onclick="toggleMobileMenu()" id="hamburger-btn">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
+      
+      <nav id="main-nav">
+        <!-- Botão fechar menu mobile -->
+        <button class="close-mobile-menu" onclick="closeMobileMenu()" id="close-mobile-btn">
+          <span>&times;</span>
+        </button>
+        
+        <div class="nav-buttons">
+          <button onclick="mostrarSecaoInteligente('home')">🏠 Home</button>
+          <button onclick="mostrarSecaoInteligente('registro')">📋 Registro</button>
+          <button onclick="mostrarSecaoInteligente('premios')">🎁 Prêmios</button>
+          <button onclick="mostrarSecaoInteligente('dashboard')">📊 Dashboard</button>
+          <button onclick="mostrarSecaoInteligente('contato')">📞 Contato</button>
+          <button id="btn-carrinho" onclick="mostrarSecaoInteligente('carrinho')" class="btn-carrinho" title="Carrinho">
+            <div class="carrinho-icon">
+              🛒
+              <span id="carrinho-contador" class="carrinho-contador">0</span>
+            </div>
+          </button>
+          <button id="btn-admin" onclick="mostrarSecaoInteligente('admin')" style="display: none;">⚙️ Admin</button>
+        </div>
+        <div class="user-section">
+          <span class="usuario-nome" id="usuario-nome" onclick="mostrarSecaoInteligente('perfil')" style="cursor: pointer;">👤 Usuário</span>
+          <button onclick="sairPortal()" class="btn-sair">🚪 Sair</button>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Seção Home -->
+    <section class="formulario fade-in-up" id="secao-home" style="display: none;">
+      <div id="banner-rotativo">
+        <img id="banner-img" src="assets/images/banners/banner1.jpg" alt="Banner 1">
+        <button id="banner-prev" onclick="trocarBanner(-1)">&#8592;</button>
+        <button id="banner-next" onclick="trocarBanner(1)">&#8594;</button>
+        
+        <!-- Indicadores de posição -->
+        <div class="banner-indicators" id="banner-indicators">
+          <span class="indicator active" onclick="irParaBanner(0)"></span>
+          <span class="indicator" onclick="irParaBanner(1)"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cartões -->
+    <section class="cards fade-in-up" id="cards-section" style="display: none;">
+      <div class="card">
+        <h1 id="pontos">0</h1>
+        <p>Meus Pontos</p>
+      </div>
+      <div class="card">
+        <h1 id="registros">0</h1>
+        <p>Registros Feitos</p>
+      </div>
+    </section>
+
+    <!-- Seção Registro -->
+    <section class="formulario fade-in-up" id="secao-registro">
+      <h3 style="text-align: center; margin-bottom: 30px;">📝 REGISTRE NOSSOS PRODUTOS AQUI</h3>
+
+      <div class="form-group">
+        <label for="referencia">Referência</label>
+        <div class="input-icon-group">
+          <img src="assets/images/icones/icone-referencia.png" alt="Ícone Referência">
+          <select id="referencia" onchange="atualizarDadosProduto()">
+            <option value="">Selecione uma referência...</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="nome-produto">Nome do Produto</label>
+        <div class="input-icon-group">
+          <img src="assets/images/icones/icone-referencia.png" alt="Ícone Produto">
+          <input type="text" id="nome-produto" placeholder="Nome será preenchido automaticamente" readonly />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="cod_barras">Código de Barras</label>
+        <div class="input-icon-group">
+          <img src="assets/images/icones/icone-barcode.png" alt="Ícone Código de Barras">
+          <input type="text" id="cod_barras" placeholder="Código será preenchido automaticamente" readonly />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="estoque-atual">Estoque Atual</label>
+        <div class="input-icon-group">
+          <img src="assets/images/icones/icone-quantidade.png" alt="Ícone Estoque">
+          <input type="number" id="estoque-atual" placeholder="Estoque será preenchido automaticamente" readonly />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="quantidade">Quantidade a Registrar</label>
+        <div class="input-icon-group">
+          <img src="assets/images/icones/icone-quantidade.png" alt="Ícone Quantidade">
+          <input type="number" id="quantidade" placeholder="Ex: 2" min="1" />
+        </div>
+      </div>
+
+      <button onclick="registrarProduto()">Registrar Produto</button>
+    </section>
+
+    <!-- Seção Prêmios -->
+    <section class="formulario fade-in-up" id="secao-premios" style="display: none;">
+      <h3 style="text-align: center; margin-bottom: 40px;">🎁 PRÊMIOS DISPONÍVEIS</h3>
+      <div id="vitrine-premios">
+        <!-- Produto 1 -->
+        <div>
+          <img id="img-produto" src="assets/images/produtos/produto-branca.jpg" alt="Produto Exemplo" style="width:140px; height:140px; object-fit:contain; margin-bottom:15px; align-self:center;">
+          <h4 style="margin:10px 0; font-size:16px; text-align:center;">T-SHIRT EM SENSITIVE</h4>
+          <div style="margin:15px 0;">
+            <label>Cor: <span id="nome-cor-produto" style="font-weight:bold; color:#7F80AF;"></span></label>
+            <div id="cores-produto" style="display:flex; gap:10px; justify-content:center; margin-top:8px;">
+              <span class="cor-icone" title="Anís" style="background:#ececf4;" onclick="selecionarCorProduto('Anís')"></span>
+              <span class="cor-icone" title="Branca" style="background:#fff; border:1px solid #ddd;" onclick="selecionarCorProduto('Branca')"></span>
+              <span class="cor-icone" title="Cappuccino" style="background:#c18666;" onclick="selecionarCorProduto('Cappuccino')"></span>
+            </div>
+          </div>
+          <div style="margin:15px 0;">
+            <label for="tamanho-produto">Tamanho:</label>
+            <select id="tamanho-produto" style="margin-left:10px; padding:5px;">
+              <option value="P">P</option>
+              <option value="M">M</option>
+              <option value="G">G</option>
+              <option value="GG">GG</option>
+            </select>
+          </div>
+          <div style="margin:15px 0; color:#7F80AF; font-weight:bold; font-size:14px;">
+            Valor para resgate: 200 pontos
+          </div>
+          <button onclick="adicionarAoCarrinho('tshirt')" style="padding:12px; font-size:14px;">🛒 Adicionar ao Carrinho</button>
+        </div>
+        
+        <!-- Produto 2 -->
+        <div>
+          <img id="img-pantalona" src="assets/images/produtos/pantalona-preto.jpg" alt="Calça Pantalona" style="width:140px; height:140px; object-fit:contain; margin-bottom:15px; align-self:center;">
+          <h4 style="margin:10px 0; font-size:16px; text-align:center;">CALÇA PANTALONA BASIC FIT</h4>
+          <div style="margin:15px 0;">
+            <label>Cor: <span id="nome-cor-pantalona" style="font-weight:bold; color:#7F80AF;"></span></label>
+            <div id="cores-pantalona" style="display:flex; gap:10px; justify-content:center; margin-top:8px;">
+              <span class="cor-icone" title="Preto" style="background:#222;" onclick="selecionarCorPantalona('Preto')"></span>
+              <span class="cor-icone" title="Cappuccino" style="background:#c18666;" onclick="selecionarCorPantalona('Cappuccino')"></span>
+              <span class="cor-icone" title="Verde Militar" style="background:#6b7a4b;" onclick="selecionarCorPantalona('Verde Militar')"></span>
+            </div>
+          </div>
+          <div style="margin:15px 0;">
+            <label for="tamanho-pantalona">Tamanho:</label>
+            <select id="tamanho-pantalona" style="margin-left:10px; padding:5px;">
+              <option value="P">P</option>
+              <option value="M">M</option>
+              <option value="G">G</option>
+              <option value="GG">GG</option>
+            </select>
+          </div>
+          <div style="margin:15px 0; color:#7F80AF; font-weight:bold; font-size:14px;">
+            Valor para resgate: 300 pontos
+          </div>
+          <button onclick="adicionarAoCarrinho('pantalona')" style="padding:12px; font-size:14px;">🛒 Adicionar ao Carrinho</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção Carrinho -->
+    <section class="formulario fade-in-up" id="secao-carrinho" style="display: none;">
+      <h3 style="text-align: center; margin-bottom: 30px; color: #667eea; font-size: 1.8em;">🛒 MEU CARRINHO</h3>
+      
+      <div class="carrinho-container">
+        <div class="carrinho-header">
+          <div class="carrinho-info">
+            <span class="carrinho-items-count">Itens no carrinho: <strong id="carrinho-total-items">0</strong></span>
+            <span class="carrinho-pontos-total">Total de pontos: <strong id="carrinho-total-pontos">0</strong></span>
+          </div>
+          <button onclick="limparCarrinho()" class="btn-limpar-carrinho">🗑️ Limpar Carrinho</button>
+        </div>
+        
+        <div class="carrinho-lista" id="carrinho-lista">
+          <!-- Itens do carrinho serão inseridos aqui -->
+        </div>
+        
+        <div class="carrinho-empty" id="carrinho-empty" style="display: none;">
+          <div class="empty-icon">🛒</div>
+          <h4>Seu carrinho está vazio</h4>
+          <p>Adicione alguns prêmios para começar!</p>
+          <button onclick="mostrarSecaoInteligente('premios')" class="btn-ir-premios">🎁 Ver Prêmios</button>
+        </div>
+        
+        <div class="carrinho-footer" id="carrinho-footer">
+          <div class="carrinho-resumo">
+            <div class="resumo-linha">
+              <span>Total de itens:</span>
+              <span id="resumo-items">0</span>
+            </div>
+            <div class="resumo-linha">
+              <span>Pontos necessários:</span>
+              <span id="resumo-pontos">0</span>
+            </div>
+            <div class="resumo-linha total">
+              <span>Seus pontos atuais:</span>
+              <span id="resumo-pontos-usuario">0</span>
+            </div>
+          </div>
+          <button onclick="finalizarCompra()" class="btn-finalizar-compra" id="btn-finalizar-compra">
+            🎁 Finalizar Resgate
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção Perfil do Usuário -->
+    <section class="formulario fade-in-up" id="secao-perfil" style="display: none;">
+      <h3 style="text-align: center; margin-bottom: 30px; color: #667eea; font-size: 1.8em;">👤 MEU PERFIL</h3>
+      
+      <div class="profile-container">
+        <div class="profile-header">
+          <div class="profile-avatar">
+            <span class="avatar-icon">👤</span>
+          </div>
+          <div class="profile-info">
+            <h4 id="profile-nome">Nome do Usuário</h4>
+            <p id="profile-cargo">Balconista</p>
+          </div>
+        </div>
+        
+        <div class="profile-form">
+          <div class="form-group">
+            <label for="profile-nome-completo">Nome Completo</label>
+            <div class="input-icon-group">
+              <span class="input-icon">👤</span>
+              <input type="text" id="profile-nome-completo" placeholder="Digite seu nome completo" />
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="profile-telefone">Telefone</label>
+            <div class="input-icon-group">
+              <span class="input-icon">📞</span>
+              <input type="tel" id="profile-telefone" placeholder="(11) 99999-9999" />
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="profile-cpf">CPF</label>
+            <div class="input-icon-group">
+              <span class="input-icon">🆔</span>
+              <input type="text" id="profile-cpf" placeholder="000.000.000-00" />
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="profile-endereco">Endereço</label>
+            <div class="input-icon-group">
+              <span class="input-icon">📍</span>
+              <input type="text" id="profile-endereco" placeholder="Rua, número, bairro" />
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="profile-loja">Loja <span class="admin-only" id="admin-only-loja" style="display: none; color: #dc3545; font-size: 0.8em;">(Apenas Admin)</span></label>
+            <div class="input-icon-group">
+              <span class="input-icon">🏪</span>
+              <select id="profile-loja">
+                <option value="">Selecione sua loja...</option>
+                <option value="centro">DelRio - Centro</option>
+                <option value="shopping">DelRio - Shopping</option>
+                <option value="bairro">DelRio - Bairro</option>
+                <option value="matriz">DelRio - Matriz</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="profile-email">E-mail</label>
+            <div class="input-icon-group">
+              <span class="input-icon">📧</span>
+              <input type="email" id="profile-email" placeholder="seu@email.com" />
+            </div>
+          </div>
+          
+          <div class="profile-actions">
+            <button onclick="salvarPerfil()" class="btn-salvar">💾 Salvar Alterações</button>
+            <button onclick="editarPerfil()" class="btn-editar">✏️ Editar Perfil</button>
+          </div>
+        </div>
+        
+        <div class="profile-stats">
+          <h4>📊 Estatísticas</h4>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-icon">📈</span>
+              <div class="stat-info">
+                <strong id="total-registros">0</strong>
+                <small>Registros Totais</small>
+              </div>
+            </div>
+            <div class="stat-item">
+              <span class="stat-icon">🏆</span>
+              <div class="stat-info">
+                <strong id="total-pontos">0</strong>
+                <small>Pontos Acumulados</small>
+              </div>
+            </div>
+            <div class="stat-item">
+              <span class="stat-icon">🎁</span>
+              <div class="stat-info">
+                <strong id="total-resgates">0</strong>
+                <small>Prêmios Resgatados</small>
+              </div>
+            </div>
+            <div class="stat-item">
+              <span class="stat-icon">📅</span>
+              <div class="stat-info">
+                <strong id="ultimo-acesso">Hoje</strong>
+                <small>Último Acesso</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção Painel Admin -->
+    <section class="formulario fade-in-up" id="secao-admin" style="display: none;">
+      <h3 style="text-align: center; margin-bottom: 30px; color: #dc3545; font-size: 1.8em;">⚙️ PAINEL ADMINISTRATIVO</h3>
+      
+      <div class="admin-container">
+        <!-- Abas de navegação -->
+        <div class="admin-tabs">
+          <button class="tab-btn active" onclick="mostrarAbaAdmin('usuarios')">👥 Usuários</button>
+          <button class="tab-btn" onclick="mostrarAbaAdmin('novo-usuario')">➕ Novo Usuário</button>
+          <button class="tab-btn" onclick="mostrarAbaAdmin('produtos')">📦 Produtos</button>
+          <button class="tab-btn" onclick="mostrarAbaAdmin('pontos')">🏆 Gerenciar Pontos</button>
+          <button class="tab-btn" onclick="mostrarAbaAdmin('configuracoes')">🔧 Configurações</button>
+        </div>
+
+        <!-- Aba Usuários -->
+        <div id="aba-usuarios" class="admin-tab-content active">
+          <h4>👥 Gerenciar Usuários</h4>
+          
+          <div class="usuarios-filtro">
+            <input type="text" id="filtro-usuarios" placeholder="👤 Buscar usuários..." onkeyup="filtrarUsuarios()" />
+            <input type="text" id="filtro-cpf" placeholder="🆔 Buscar por CPF..." onkeyup="formatarCpfFiltro(this); filtrarUsuarios()" maxlength="14" />
+            <select id="filtro-loja" onchange="filtrarUsuarios()">
+              <option value="">🏪 Todas as lojas</option>
+              <option value="matriz">DelRio - Matriz</option>
+              <option value="centro">DelRio - Centro</option>
+              <option value="shopping">DelRio - Shopping</option>
+              <option value="bairro">DelRio - Bairro</option>
+            </select>
+          </div>
+          
+          <div class="usuarios-lista" id="usuarios-lista">
+            <!-- Lista de usuários será carregada aqui -->
+          </div>
+        </div>
+
+        <!-- Aba Novo Usuário -->
+        <div id="aba-novo-usuario" class="admin-tab-content">
+          <h4>➕ Cadastrar Novo Usuário</h4>
+          
+          <form id="form-novo-usuario" onsubmit="cadastrarNovoUsuario(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="novo-usuario">Nome de Usuário *</label>
+                <input type="text" id="novo-usuario" required placeholder="Digite o nome de usuário" />
+              </div>
+              
+              <div class="form-group">
+                <label for="novo-senha">Senha *</label>
+                <input type="password" id="novo-senha" required placeholder="Digite a senha" />
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="novo-nome">Nome Completo *</label>
+                <input type="text" id="novo-nome" required placeholder="Nome completo do usuário" />
+              </div>
+              
+              <div class="form-group">
+                <label for="novo-telefone">Telefone *</label>
+                <input type="tel" id="novo-telefone" required placeholder="(11) 99999-9999" />
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="novo-cpf">CPF *</label>
+                <input type="text" id="novo-cpf" required placeholder="000.000.000-00" />
+              </div>
+              
+              <div class="form-group">
+                <label for="novo-loja">Loja *</label>
+                <select id="novo-loja" required>
+                  <option value="">Selecione uma loja</option>
+                  <option value="matriz">DelRio - Matriz</option>
+                  <option value="centro">DelRio - Centro</option>
+                  <option value="shopping">DelRio - Shopping</option>
+                  <option value="bairro">DelRio - Bairro</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="novo-endereco">Endereço</label>
+                <input type="text" id="novo-endereco" placeholder="Rua, número, bairro" />
+              </div>
+              
+              <div class="form-group">
+                <label for="novo-email">E-mail</label>
+                <input type="email" id="novo-email" placeholder="usuario@delrio.com.br" />
+              </div>
+            </div>
+            
+            <div class="form-actions">
+              <button type="submit" class="btn-primary">💾 Cadastrar Usuário</button>
+              <button type="button" onclick="limparFormularioUsuario()" class="btn-secondary">🔄 Limpar</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Aba Produtos -->
+        <div id="aba-produtos" class="admin-tab-content">
+          <!-- Seção Principal - Lista de Produtos -->
+          <div id="produtos-lista-principal" class="produtos-main-section">
+            <div class="produtos-header">
+              <h4>📦 Gerenciar Produtos</h4>
+              <button onclick="mostrarFormularioCadastro()" class="btn-cadastrar-produto">
+                ➕ Cadastrar Produto
+              </button>
+            </div>
+            
+            <!-- Filtro de Busca -->
+            <div class="busca-container">
+              <div class="form-group">
+                <label for="filtro-produtos-busca">
+                  <span style="margin-right: 8px;">🔍</span>
+                  Buscar por Nome:
+                </label>
+                <input type="text" id="filtro-produtos-busca" placeholder="Digite o nome do produto..." 
+                       oninput="filtrarProdutosPrincipal()" />
+              </div>
+            </div>
+            
+            <!-- Lista de Produtos em Cards -->
+            <div class="produtos-container">
+              <div class="produtos-grid" id="produtos-grid">
+                <!-- Produtos serão carregados aqui -->
+              </div>
+              
+              <div class="produtos-empty" id="produtos-empty" style="display: none;">
+                <div class="empty-icon">📦</div>
+                <h4>Nenhum produto cadastrado</h4>
+                <p>Clique em "Cadastrar Produto" para adicionar o primeiro produto!</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Formulário de Cadastro/Edição (Oculto inicialmente) -->
+          <div id="produtos-form-section" class="produtos-form-section" style="display: none;">
+            <div class="form-header">
+              <h4 id="form-title">➕ Cadastrar Novo Produto</h4>
+              <button onclick="voltarParaLista()" class="btn-voltar">
+                ⬅️ Voltar à Lista
+              </button>
+            </div>
+            
+            <form id="form-produto" onsubmit="processarFormularioProduto(event)">
+              <div class="form-row">
+                <div class="form-group produtos-form-group">
+                  <label for="produto-nome">
+                    <span style="margin-right: 8px;">📝</span>
+                    NOME DO PRODUTO:
+                  </label>
+                  <input type="text" id="produto-nome" class="produtos-input" required placeholder="Ex: Camiseta Delrio" />
+                </div>
+                
+                <div class="form-group produtos-form-group">
+                  <label for="produto-pontos">
+                    <span style="margin-right: 8px;">🏆</span>
+                    PONTOS PARA RESGATE:
+                  </label>
+                  <input type="number" id="produto-pontos" class="produtos-input" required min="1" placeholder="Ex: 200" />
+                </div>
+                
+                <div class="form-group produtos-form-group">
+                  <label for="produto-ativo">
+                    <span style="margin-right: 8px;">👁️</span>
+                    STATUS DO PRODUTO:
+                  </label>
+                  <select id="produto-ativo" class="produtos-select" required>
+                    <option value="true">Ativo (Visível na vitrine)</option>
+                    <option value="false">Inativo (Oculto)</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group produtos-form-group">
+                  <label for="produto-categoria">
+                    <span style="margin-right: 8px;">📂</span>
+                    CATEGORIA:
+                  </label>
+                  <select id="produto-categoria" class="produtos-select" required>
+                    <option value="">-- Selecione uma categoria --</option>
+                    <option value="camiseta">Camiseta</option>
+                    <option value="pantalona">Pantalona</option>
+                    <option value="acessorio">Acessório</option>
+                    <option value="outro">Outro</option>
+                  </select>
+                </div>
+              </div>
+              <!-- Variações de Cores -->
+              <div class="form-group">
+                <div class="cores-header">
+                  <label>
+                    <span style="margin-right: 8px;">🎨</span>
+                    Cores Disponíveis:
+                  </label>
+                  <button type="button" class="btn-gerenciar-cores" onclick="abrirGerenciadorCores()">
+                    ⚙️ Gerenciar Cores
+                  </button>
+                </div>
+                <div class="cores-container" id="cores-container">
+                  <!-- Cores serão carregadas dinamicamente -->
+                </div>
+              </div>
+
+              <!-- Seção para Upload de Imagens por Cor -->
+              <div class="form-group">
+                <label>
+                  <span style="margin-right: 8px;">📸</span>
+                  Fotos por Cor:
+                </label>
+                <div class="fotos-por-cor-section" id="fotos-por-cor-section">
+                  <div class="cores-imagens-info">
+                    <p>Selecione as cores acima para fazer upload das fotos correspondentes</p>
+                  </div>
+                  <!-- Campos de upload aparecerão aqui dinamicamente -->
+                </div>
+              </div>
+              
+              <!-- Variações de Tamanhos -->
+              <div class="form-group">
+                <label>
+                  <span style="margin-right: 8px;">📏</span>
+                  Tamanhos Disponíveis:
+                </label>
+                <div class="tamanhos-container">
+                  <div class="tamanho-item">
+                    <input type="checkbox" id="tamanho-pp" name="tamanhos" value="PP" />
+                    <label for="tamanho-pp" class="tamanho-label">PP</label>
+                  </div>
+                  <div class="tamanho-item">
+                    <input type="checkbox" id="tamanho-p" name="tamanhos" value="P" />
+                    <label for="tamanho-p" class="tamanho-label">P</label>
+                  </div>
+                  <div class="tamanho-item">
+                    <input type="checkbox" id="tamanho-m" name="tamanhos" value="M" />
+                    <label for="tamanho-m" class="tamanho-label">M</label>
+                  </div>
+                  <div class="tamanho-item">
+                    <input type="checkbox" id="tamanho-g" name="tamanhos" value="G" />
+                    <label for="tamanho-g" class="tamanho-label">G</label>
+                  </div>
+                  <div class="tamanho-item">
+                    <input type="checkbox" id="tamanho-gg" name="tamanhos" value="GG" />
+                    <label for="tamanho-gg" class="tamanho-label">GG</label>
+                  </div>
+                  <div class="tamanho-item">
+                    <input type="checkbox" id="tamanho-xgg" name="tamanhos" value="XGG" />
+                    <label for="tamanho-xgg" class="tamanho-label">XGG</label>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="form-actions">
+                <button type="submit" class="btn-primary" id="btn-submit-produto">💾 Cadastrar Produto</button>
+                <button type="button" onclick="limparFormularioProduto()" class="btn-secondary">🔄 Limpar</button>
+                <button type="button" onclick="voltarParaLista()" class="btn-tertiary">❌ Cancelar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Aba Gerenciar Pontos -->
+        <div id="aba-pontos" class="admin-tab-content">
+          <h4>🏆 Gerenciar Pontos dos Usuários</h4>
+          
+          <div class="pontos-container">
+            <!-- Filtros de Busca -->
+            <div class="form-group">
+              <label for="filtro-cpf-pontos">
+                <span style="margin-right: 8px;">🔍</span>
+                Buscar por CPF:
+              </label>
+              <input type="text" id="filtro-cpf-pontos" placeholder="000.000.000-00" maxlength="14" 
+                     oninput="formatarCpfFiltroPontos(this); filtrarUsuariosPontos()" />
+            </div>
+            
+            <div class="form-group">
+              <label for="usuario-pontos">
+                <span style="margin-right: 8px;">👤</span>
+                Selecionar Usuário:
+              </label>
+              <select id="usuario-pontos" onchange="carregarPontosUsuario()">
+                <option value="">Selecione um usuário...</option>
+              </select>
+            </div>
+            
+            <div class="pontos-info" id="pontos-info" style="display: none;">
+              <div class="pontos-atual-display">
+                <h5>💎 Pontos do Usuário</h5>
+                <div class="pontos-ajuste-container">
+                  <button type="button" class="btn-ajuste btn-diminuir" onclick="diminuirPontosUsuario()">-</button>
+                  <div class="pontos-atual-centro">
+                    <span id="pontos-atual-valor" class="pontos-valor-atual">0</span>
+                  </div>
+                  <button type="button" class="btn-ajuste btn-aumentar" onclick="aumentarPontosUsuario()">+</button>
+                </div>
+              </div>
+              
+              <div class="pontos-actions">
+                <div class="motivo-section">
+                  <h6>📝 Motivo da Alteração</h6>
+                  <input type="text" id="motivo-pontos" placeholder="Digite o motivo da alteração dos pontos..." />
+                </div>
+                
+                <div class="confirmar-section">
+                  <button onclick="confirmarAjustePontos()" class="btn-confirmar-ajuste">
+                    <span style="margin-right: 8px;">✅</span>
+                    Confirmar Ajuste
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="historico-pontos" id="historico-pontos" style="display: none;">
+              <h5>📋 Histórico de Alterações</h5>
+              <div class="historico-lista" id="historico-lista">
+                <!-- Histórico será carregado aqui -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Aba Configurações -->
+        <div id="aba-configuracoes" class="admin-tab-content">
+          <h4>🔧 Configurações do Sistema</h4>
+          
+          <div class="config-section">
+            <h5>🎁 Gerenciamento de Produtos</h5>
+            
+            <!-- Filtro de Produtos -->
+            <div class="form-group">
+              <label for="filtro-produto-config">
+                <span style="margin-right: 8px;">🔍</span>
+                Buscar Produto por Nome:
+              </label>
+              <input type="text" id="filtro-produto-config" placeholder="Digite o nome do produto..." 
+                     oninput="filtrarProdutosConfig()" />
+            </div>
+            
+            <div class="form-group">
+              <label for="produto-selecionado-config">
+                <span style="margin-right: 8px;">📦</span>
+                Selecionar Produto:
+              </label>
+              <select id="produto-selecionado-config" onchange="carregarDadosProduto()">
+                <option value="">-- Selecione um produto --</option>
+              </select>
+            </div>
+            
+            <!-- Opções do Produto Selecionado -->
+            <div id="produto-config-opcoes" style="display: none;">
+              <div class="produto-config-info">
+                <h6 id="produto-nome-display">Nome do Produto</h6>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="produto-pontos-config">Pontos para Resgate:</label>
+                    <input type="number" id="produto-pontos-config" min="1" />
+                  </div>
+                  <div class="form-group">
+                    <label for="produto-ativo-config">Status na Vitrine:</label>
+                    <select id="produto-ativo-config">
+                      <option value="true">Ativo (Visível)</option>
+                      <option value="false">Inativo (Oculto)</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div class="produto-config-actions">
+                  <button onclick="salvarAlteracoesProduto()" class="btn-primary">
+                    💾 Salvar Alterações
+                  </button>
+                  <button onclick="toggleStatusProduto()" class="btn-secondary" id="btn-toggle-status">
+                    👁️ Ativar/Desativar
+                  </button>
+                  <button onclick="excluirProduto()" class="btn-danger">
+                    🗑️ Excluir Produto
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="config-section">
+            <h5>🎁 Configurações de Prêmios</h5>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="config-pontos-produto">Pontos por Produto Registrado</label>
+                <input type="number" id="config-pontos-produto" value="10" min="1" />
+              </div>
+              
+              <div class="form-group">
+                <label for="config-pontos-tshirt">Pontos T-Shirt</label>
+                <input type="number" id="config-pontos-tshirt" value="200" min="1" />
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="config-pontos-pantalona">Pontos Pantalona</label>
+                <input type="number" id="config-pontos-pantalona" value="300" min="1" />
+              </div>
+            </div>
+            
+            <button onclick="salvarConfiguracoes()" class="btn-primary">💾 Salvar Configurações</button>
+          </div>
+          
+          <div class="config-section">
+            <h5>📊 Estatísticas do Sistema</h5>
+            <div class="stats-admin">
+              <div class="stat-admin">
+                <span class="stat-label">Total de Usuários:</span>
+                <span class="stat-value" id="total-usuarios-sistema">0</span>
+              </div>
+              <div class="stat-admin">
+                <span class="stat-label">Usuários Ativos:</span>
+                <span class="stat-value" id="usuarios-ativos">0</span>
+              </div>
+              <div class="stat-admin">
+                <span class="stat-label">Registros Totais:</span>
+                <span class="stat-value" id="registros-totais-sistema">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção Contato -->
+    <section class="formulario fade-in-up" id="secao-contato" style="display: none; margin-top: 40px;">
+      <h3 style="text-align: center; margin-bottom: 30px;">📞 CONTATO</h3>
+      <div style="text-align: center; padding: 30px;">
+        <h4 style="color: #667eea; margin-bottom: 40px; font-size: 20px; font-weight: 600;">Entre em contato conosco</h4>
+        
+        <div style="display: flex; flex-direction: column; gap: 25px; max-width: 500px; margin: 0 auto;">
+          <div style="display: flex; align-items: center; gap: 20px; padding: 20px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 15px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 15px 35px rgba(0, 0, 0, 0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0, 0, 0, 0.1)'">
+            <span style="font-size: 28px; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));">📧</span>
+            <div style="text-align: left; flex: 1;">
+              <strong style="color: #2c3e50; font-size: 16px;">E-mail:</strong><br>
+              <span style="color: #667eea; font-weight: 500;">contato@delrio.com.br</span>
+            </div>
+            <button onclick="abrirFormularioContato()" style="padding: 12px 18px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 9px; font-weight: 600; width: 120px; height: 40px; white-space: nowrap; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(102, 126, 234, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.3)'">Enviar E-mail</button>
+          </div>
+          
+          <div style="display: flex; align-items: center; gap: 20px; padding: 20px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 15px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 15px 35px rgba(0, 0, 0, 0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0, 0, 0, 0.1)'">
+            <span style="font-size: 28px; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));">📱</span>
+            <div style="text-align: left; flex: 1;">
+              <strong style="color: #2c3e50; font-size: 16px;">WhatsApp:</strong><br>
+              <span style="color: #667eea; font-weight: 500;">(11) 99999-9999</span>
+            </div>
+            <button onclick="abrirWhatsApp()" style="padding: 12px 18px; background: linear-gradient(135deg, #25D366 0%, #20c997 100%); color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 9px; font-weight: 600; width: 120px; height: 40px; white-space: nowrap; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(37, 211, 102, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(37, 211, 102, 0.3)'">Abrir WhatsApp</button>
+          </div>
+          
+          <div style="display: flex; align-items: center; gap: 20px; padding: 20px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 15px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 15px 35px rgba(0, 0, 0, 0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0, 0, 0, 0.1)'">
+            <span style="font-size: 28px; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));">☎️</span>
+            <div style="text-align: center; flex: 1;">
+              <strong style="color: #2c3e50; font-size: 16px;">Telefone:</strong><br>
+              <span style="color: #667eea; font-weight: 500;">(11) 3333-3333</span>
+            </div>
+          </div>
+          
+          <div style="display: flex; align-items: center; gap: 20px; padding: 20px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 15px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 15px 35px rgba(0, 0, 0, 0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0, 0, 0, 0.1)'">
+            <span style="font-size: 28px; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));">📍</span>
+            <div style="text-align: center; flex: 1;">
+              <strong style="color: #2c3e50; font-size: 16px;">Endereço:</strong><br>
+              <span style="color: #667eea; font-weight: 500;">Rua das Flores, 123<br>São Paulo - SP</span>
+            </div>
+          </div>
+          
+          <div style="display: flex; align-items: center; gap: 20px; padding: 20px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 15px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 15px 35px rgba(0, 0, 0, 0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(0, 0, 0, 0.1)'">
+            <span style="font-size: 28px; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));">🕒</span>
+            <div style="text-align: center; flex: 1;">
+              <strong style="color: #2c3e50; font-size: 16px;">Horário de Atendimento:</strong><br>
+              <span style="color: #667eea; font-weight: 500;">Segunda a Sexta: 8h às 18h<br>Sábado: 8h às 12h</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção Dashboard Analytics -->
+    <section class="formulario fade-in-up" id="secao-dashboard" style="display: none;">
+      <h3 style="text-align: center; margin-bottom: 40px; font-size: 2.2em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;"><span style="color: #667eea; text-shadow: none; background: none; -webkit-text-fill-color: #667eea;">📊</span> DASHBOARD ANALYTICS</h3>
+      
+      <!-- Resumo Geral -->
+      <div class="dashboard-summary">
+        <div class="summary-card">
+          <div class="summary-icon">📈</div>
+          <div class="summary-content">
+            <h4>Registros de Hoje</h4>
+            <span class="summary-value" id="vendas-hoje">0</span>
+            <small>produtos registrados</small>
+          </div>
+        </div>
+        
+        <div class="summary-card">
+          <div class="summary-icon">🏆</div>
+          <div class="summary-content">
+            <h4>Pontos Acumulados</h4>
+            <span class="summary-value" id="faturamento">R$ 0,00</span>
+            <small>últimos 30 dias</small>
+          </div>
+        </div>
+        
+        <div class="summary-card">
+          <div class="summary-icon">🎯</div>
+          <div class="summary-content">
+            <h4>Meta Mensal</h4>
+            <span class="summary-value" id="meta-progresso">0%</span>
+            <small>progresso da meta</small>
+          </div>
+        </div>
+        
+        <div class="summary-card">
+          <div class="summary-icon">⭐</div>
+          <div class="summary-content">
+            <h4>Performance</h4>
+            <span class="summary-value" id="performance">Excelente</span>
+            <small>classificação</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráficos -->
+      <div class="dashboard-charts">
+        <div class="chart-container">
+          <h4>📊 Registros por Dia (Últimos 7 dias)</h4>
+          <canvas id="vendas-chart" width="400" height="200"></canvas>
+        </div>
+        
+        <div class="chart-container">
+          <h4>🏆 Top Produtos Registrados</h4>
+          <div class="top-produtos">
+            <div class="produto-rank">
+              <span class="rank">#1</span>
+              <span class="produto-nome">T-Shirt Básica</span>
+              <span class="produto-vendas">45 registros</span>
+            </div>
+            <div class="produto-rank">
+              <span class="rank">#2</span>
+              <span class="produto-nome">Calça Jeans</span>
+              <span class="produto-vendas">32 registros</span>
+            </div>
+            <div class="produto-rank">
+              <span class="rank">#3</span>
+              <span class="produto-nome">Blusa Social</span>
+              <span class="produto-vendas">28 registros</span>
+            </div>
+            <div class="produto-rank">
+              <span class="rank">#4</span>
+              <span class="produto-nome">Tênis Esportivo</span>
+              <span class="produto-vendas">21 registros</span>
+            </div>
+            <div class="produto-rank">
+              <span class="rank">#5</span>
+              <span class="produto-nome">Vestido Casual</span>
+              <span class="produto-vendas">18 registros</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filtros de Período -->
+      <div class="dashboard-filters">
+        <h4>📅 Filtrar por Período</h4>
+        <div class="filter-buttons">
+          <button onclick="filtrarDashboard('hoje')" class="filter-btn active">Hoje</button>
+          <button onclick="filtrarDashboard('semana')" class="filter-btn">7 dias</button>
+          <button onclick="filtrarDashboard('mes')" class="filter-btn">30 dias</button>
+          <button onclick="filtrarDashboard('trimestre')" class="filter-btn">90 dias</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modal Formulário de Contato -->
+    <div id="modal-contato" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+      <div style="background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 500px; position: relative;">
+        <button onclick="fecharFormularioContato()" style="position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">&times;</button>
+        
+        <h3 style="margin-bottom: 20px; color: #7F80AF; text-align: center;">Formulário de Contato</h3>
+        
+        <form id="form-contato">
+          <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #04185b;">Nome:</label>
+            <input type="text" id="nome-contato" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
+          </div>
+          
+          <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #04185b;">E-mail:</label>
+            <input type="email" id="email-contato" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
+          </div>
+          
+          <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #04185b;">Telefone:</label>
+            <input type="tel" id="telefone-contato" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
+          </div>
+          
+          <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #04185b;">Assunto:</label>
+            <input type="text" id="assunto-contato" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
+          </div>
+          
+          <div style="margin-bottom: 20px;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #04185b;">Mensagem:</label>
+            <textarea id="mensagem-contato" required rows="4" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; resize: vertical;"></textarea>
+          </div>
+          
+          <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <button type="button" onclick="fecharFormularioContato()" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 5px; cursor: pointer;">Cancelar</button>
+            <button type="submit" style="padding: 10px 20px; background: #7F80AF; color: white; border: none; border-radius: 5px; cursor: pointer;">Enviar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 - Registration Application for Store Clerk | Designed by Johnata Paiva</p>
+  </footer>
+
+  <!-- Modal para Gerenciar Cores -->
+  <div id="modal-cores" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>🎨 Gerenciar Cores</h3>
+        <button type="button" class="modal-close" onclick="fecharGerenciadorCores()">✕</button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="gerenciador-cores">
+          <div class="cores-existentes" id="cores-existentes">
+            <!-- Cores existentes serão carregadas aqui -->
+          </div>
+          
+          <div class="nova-cor-section">
+            <h4>➕ Adicionar Nova Cor</h4>
+            <div class="nova-cor-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="nova-cor-nome">Nome da Cor:</label>
+                  <input type="text" id="nova-cor-nome" placeholder="Ex: Azul Marinho" maxlength="20">
+                </div>
+                <div class="form-group">
+                  <label for="nova-cor-hex">Cor (Hex):</label>
+                  <div class="color-input-group">
+                    <input type="color" id="nova-cor-hex" value="#000000">
+                    <input type="text" id="nova-cor-hex-text" placeholder="#000000" maxlength="7">
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn-adicionar-cor" onclick="adicionarNovaCor()">
+                ➕ Adicionar Cor
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" onclick="resetarCoresPadrao()">
+          🔄 Resetar Cores
+        </button>
+        <button type="button" class="btn-secondary" onclick="fecharGerenciadorCores()">
+          ❌ Fechar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+
+  <!-- Modal do Gerenciador de Cores -->
+  <div id="gerenciadorCoresModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>🎨 Gerenciar Cores</h3>
+        <button type="button" class="modal-close" onclick="fecharGerenciadorCores()">×</button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="gerenciador-cores">
+          <!-- Cores Existentes -->
+          <div class="cores-existentes-section">
+            <h4>Cores Existentes</h4>
+            <div id="coresExistentes" class="cores-existentes">
+              <!-- Cores serão carregadas dinamicamente aqui -->
+            </div>
+          </div>
+          
+          <!-- Adicionar Nova Cor -->
+          <div class="nova-cor-section">
+            <h4>Adicionar Nova Cor</h4>
+            <div class="nova-cor-form">
+              <div class="form-group">
+                <label for="nomeNovaCor">Nome da Cor:</label>
+                <input type="text" id="nomeNovaCor" placeholder="Ex: Azul Turquesa" maxlength="30">
+              </div>
+              
+              <div class="form-group">
+                <label for="hexNovaCor">Código da Cor:</label>
+                <div class="color-input-group">
+                  <input type="color" id="corPicker" value="#000000">
+                  <input type="text" id="hexNovaCor" placeholder="#000000" maxlength="7" pattern="^#[0-9A-Fa-f]{6}$">
+                </div>
+              </div>
+              
+              <button type="button" class="btn-adicionar-cor" onclick="adicionarNovaCor()">
+                ➕ Adicionar Cor
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" onclick="resetarCoresPadrao()">
+          🔄 Resetar Cores
+        </button>
+        <button type="button" class="btn-secondary" onclick="fecharGerenciadorCores()">
+          ❌ Fechar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Container para notificações toast -->
+  <div class="toast-container" id="toast-container"></div>
+</body>
+</html>
